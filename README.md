@@ -1,7 +1,6 @@
 # 拉勾网数据挖掘岗位分析代码
 
-数据分析报告：
-
+数据分析报告：http://www.jianshu.com/p/750c9b0996cc
 使用到的 R 语言包：ggplot2, jiebaR, wordcloud2
 代码结构：
 
