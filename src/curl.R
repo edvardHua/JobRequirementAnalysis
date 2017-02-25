@@ -44,7 +44,7 @@ while(i <= total.pages){
     encode = "form", 
     body = list(first = "true", pn = i, kd = "数据挖掘"),
     add_headers(.headers = my.header),
-    use_proxy("183.19.12.40", 3128),
+    use_proxy("183.19.12.40", 3128),  # 根据需求看是否要代理
     verbose()
   )
   if(200 == status_code(r)){
@@ -72,7 +72,7 @@ while(i <= total.pages){
 required.fields <- c(  # 获取需要的字段
   "positionId", "city",
   "industryField", "companyShortName", "companySize",
-  "financeStage", "education",
+  "financeStage", "education", "workYear",
   "positionName", "salary"
 )
 FuncFilter <- function(item){
@@ -82,6 +82,7 @@ FuncFilter <- function(item){
   return(item) 
 }
 
+# 从 json 数据获取职位基础的信息
 GetBasicPositionInfo <- function(path){
   json <- fromJSON(file = path)
   result.info <- json$content$positionResult
@@ -96,23 +97,27 @@ all.positions <- lapply(files.names, GetBasicPositionInfo)
 
 # 根据职业的ID，再从拉勾网上获取对应职业的专业技能要求
 library(rvest)  #  加载该包主要为了使用里面的 css selector
-position.data.frame <- data.frame();
-for(i in 3:length(all.positions)){
+position.data.frame <- data.frame()
+for(i in 1:length(all.positions)){  # 这步时间可能会有点长,需要等半个小时左右
   for(j in 1:15){
     tmp <- all.positions[[i]][j]
     tmp <- unlist(tmp)
     tmp <- unname(tmp)
+    if(length(tmp) != 10)  # 对没有填充完整数据的职位，则跳过不处理
+      next
     url <- paste("https://www.lagou.com/jobs/", tmp[1], ".html", sep = "")
     web <- GET(url)
     web <- read_html(content(web, "text", encoding = "UTF-8"))
     requirement <- web %>% html_nodes(".job_bt") %>% html_text() #  根据class获取需求内容
-    tmp[10] <- requirement
-    dim(tmp) <- c(1,10)
+    tmp[11] <- requirement
+    dim(tmp) <- c(1,11)
     position.data.frame <- rbind(position.data.frame, tmp)
     Sys.sleep(2)  # 系统暂停 2 秒后再执行,避免封锁IP
   }
 }
 
 # 保存至 data 文件夹中，数据爬取完成
-write.table(position.data.frame,'cache/position.csv',row.names=F,sep = " ")
+write.table(position.data.frame,'cache/position.csv', row.names=F, sep = " ")
+
+
 

@@ -1,48 +1,14 @@
 # 安装所需的包
-
 install.packages("plotrix")
 install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("sqldf")
+install.packages("jiebaR")
+install.packages("wordcloud2")
 
-# 加载所需的包
-
-library(ggplot2)
-library(RColorBrewer)
-library(plotrix)
-
-# 加载数据
-
-data <- read.table("cache/position.csv", header = T, sep = " ")
-
-colnames(data) <- c(  # 给col命名
-  "positionId", "city",
-  "industryField", "companyShortName", "companySize",
-  "financeStage", "education",
-  "positionName", "salary", "requirement"
-)
-
-education <- data$education
-education <- data.frame(table(education))
-
-education.qualifications <- as.factor(education$education)
-myLabel <- paste(education.qualifications, " (", round(education$Freq / sum(education$Freq) * 100, 2), "%)", sep = "") 
-
-par(family='STXihei')  # 防止 Mac 下中文显示乱码 
-# 由于占比过小，使用 pie 会挤在一起，所以使用 pie3D
-pie3D(
-  x = education$Freq, labels = myLabel,
-  radius = 0.8,
-  height = 0.1,
-  border = "white", col = brewer.pal(5, "Set1"),
-  labelcex = 0.85,
-  main = "企业对学历的要求"
-)
-
-
-
-
-
-
-
-
-
+# 读取数据
+data <- read.table("cache/position_after_cleaning.csv", header = T, sep = " ")
+# 重新排序 factor 的 levels 的顺序
+data$salary <- factor(data$salary, levels = c("0-5K", "6-10K", "11-15K", "16-20K", "21-25K", "26-30K", "31-100K"))
+data$workYear <- factor(data$workYear, levels = c("不限", "应届毕业生", "1年以下", "1-3年", "3-5年", "5-10年", "10年以上"))
 
