@@ -1,17 +1,3 @@
-library(jiebaR)
-library(wordcloud2)
-
-# 将搜狗的计算机类别的细胞词库转换成 jieba 词典格式
-# Sys.setenv(http_proxy="https://127.0.0.1:1080")  # 设置代理，下面的内容好像需要翻墙安装
-install.packages("devtools")
-install.packages("stringi")
-install.packages("pbapply")
-install.packages("Rcpp")
-install.packages("RcppProgress")
-library(devtools)
-install_github("qinwf/cidian")
-library(cidian)
-
 # 词库是从搜狗输入法官网下载的
 decode_scel(scel = "corpus/计算机词汇大全.scel",output = "corpus/cs.dict.utf8",cpp = TRUE)
 decode_scel(scel = "corpus/linux少量术语.scel",output = "corpus/cs1.dict.utf8",cpp = TRUE)
@@ -88,6 +74,16 @@ ggplot(corpus.high.freq, aes(x = word, y = freq, fill = word, label = freq)) +
   ggtitle("「数据挖掘」- 热门术语出现次数") +
   theme(plot.title = element_text(hjust = 0.5))
 
+
+# 进行关联的分析
+# 企业对不同工作资历的应聘者的要求是什么 ？
+workyear.empty <- dplyr::filter(data, workYear == "不限")
+workyear.freshman <- dplyr::filter(data, workYear == "应届毕业生")
+workyear.oneyear <- dplyr::filter(data, workYear == "1年以下")
+workyear.threeyear <- dplyr::filter(data, workYear == "1-3年")
+workyear.fiveyear <- dplyr::filter(data, workYear == "3-5年")
+workyear.tenyear <- dplyr::filter(data, workYear == "5-10年")
+workyear.overtenyear <- dplyr::filter(data, workYear == "10年以上")
 
 
 

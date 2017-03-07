@@ -1,9 +1,3 @@
-# 安装所需的包
-install.packages("sqldf")
-
-# 加载所需的包
-library(sqldf)
-
 # 加载数据
 data <- read.table("cache/position.csv", header = T, sep = " ")
 

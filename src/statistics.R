@@ -1,10 +1,3 @@
-library(ggplot2)
-library(RColorBrewer)
-library(plotrix)
-library(dplyr)
-library(stringr)
-library(sqldf)
-
 # 学历的分布
 education <- data$education
 education <- data.frame(table(education))

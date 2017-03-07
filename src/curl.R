@@ -1,10 +1,3 @@
-# 安装需要的库
-install.packages("rjson")
-install.packages("rvest")
-# 加载需要的库
-library(rjson)  
-library(httr)
-
 # 定义请求头
 my.header <- c(
   "Host" = "www.lagou.com",
@@ -66,8 +59,6 @@ while(i <= total.pages){
 }
 
 
-
-
 # 从json数据中得到职位的基本信息
 required.fields <- c(  # 获取需要的字段
   "positionId", "city",
@@ -96,7 +87,6 @@ files.names <- paste('data/', files.names, sep = "")  # 路径加上前缀
 all.positions <- lapply(files.names, GetBasicPositionInfo)
 
 # 根据职业的ID，再从拉勾网上获取对应职业的专业技能要求
-library(rvest)  #  加载该包主要为了使用里面的 css selector
 position.data.frame <- data.frame()
 for(i in 1:length(all.positions)){  # 这步时间可能会有点长,需要等半个小时左右
   for(j in 1:15){
